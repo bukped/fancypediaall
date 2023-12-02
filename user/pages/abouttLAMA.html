@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <title>Display Data</title>
+  <style>
+    /* Add your custom styles here if needed */
+  </style>
+</head>
+
+<body class="bg-gray-100 p-8">
+  <div id="app" class="max-w-xl mx-auto">
+    <!-- JavaScript will render the content here -->
+  </div>
+
+  <script>
+    // Fetch data from the API
+    fetch('https://asia-southeast2-testlogin-366704.cloudfunctions.net/getallabout')
+      .then(response => response.json())
+      .then(data => {
+        // Display data when status is true
+        const appElement = document.getElementById('app');
+        data.data.forEach(item => {
+            if (item.status) {
+  const card = document.createElement('div');
+  card.className = 'bg-white p-4 mb-4 shadow-lg rounded-md'; // Updated shadow and added rounded corners
+  card.innerHTML = `
+    <h2 class="text-xl font-bold mb-4 text-blue-600">${item.title}</h2> <!-- Larger font size and a blue color -->
+    <p class="text-gray-600 mb-4">${item.description}</p>
+    <img src="${item.image}" alt="Main Image" class="w-full h-40 object-cover mb-4 rounded-md"> <!-- Responsive image with rounded corners -->
+
+    <!-- Example: Display content -->
+    <div class="mt-4">
+      <h3 class="text-md font-semibold mb-2 text-green-600">Content</h3> <!-- Green color for headings -->
+      <p class="text-gray-600 mb-2">${item.content[0].content}</p>
+      <img src="${item.content[0].image}" alt="Content Image" class="w-full h-32 object-cover mb-2 rounded-md"> <!-- Responsive image with rounded corners -->
+      <p class="text-gray-600 mb-2">${item.content[0].description}</p>
+    </div>
+
+    <!-- Example: Display product -->
+    <div class="mt-4">
+      <h3 class="text-md font-semibold mb-2 text-orange-600">Product</h3> <!-- Orange color for headings -->
+      <p class="text-gray-600 mb-2">${item.product[0].name}</p>
+      <p class="text-gray-600 mb-2">${item.product[0].description}</p>
+      <p class="text-gray-700 font-bold mb-2">${item.product[0].price}</p> <!-- Bold font for price -->
+      <p class="text-gray-600 mb-2">${item.product[0].stock}</p>
+      <p class="text-gray-600 mb-2">${item.product[0].size}</p>
+      <img src="${item.product[0].image}" alt="Product Image" class="w-full h-32 object-cover mb-2 rounded-md"> <!-- Responsive image with rounded corners -->
+    </div>
+  `;
+  appElement.appendChild(card);
+}
+
+        });
+      })
+      .catch(error => console.error('Error fetching data:', error));
+  </script>
+</body>
+
+</html>

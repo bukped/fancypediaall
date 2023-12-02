@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <title>Comments</title>
+</head>
+<body class="bg-gray-100">
+
+    <div class="container mx-auto my-10">
+        <h1 class="text-2xl font-bold mb-4">Comments</h1>
+        <div id="commentsList" class="space-y-4"></div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            fetch('https://asia-southeast2-testlogin-366704.cloudfunctions.net/getallcomment')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status) {
+                        displayComments(data.data);
+                    } else {
+                        console.error("Error fetching comments:", data.message);
+                        displayError("Failed to fetch comments. Please try again later.");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error fetching comments:", error);
+                    displayError("Failed to fetch comments. Please try again later.");
+                });
+        });
+
+        function displayComments(comments) {
+            const commentsList = document.getElementById('commentsList');
+
+            comments.forEach(comment => {
+                // Check if status is true before displaying the comment
+                if (comment.status) {
+                    const commentElement = document.createElement('div');
+                    commentElement.classList.add('bg-white', 'p-4', 'rounded');
+
+                    commentElement.innerHTML = `
+                        <div>
+                            <span class="font-bold">${comment.username}</span> - ${comment.tanggal}
+                        </div>
+                        <div class="mt-2">${comment.comment}</div>
+                        <div class="mt-2">${comment.questions}</div>
+                    `;
+
+                    commentsList.appendChild(commentElement);
+                }
+            });
+        }
+
+        function displayError(errorMessage) {
+            const commentsList = document.getElementById('commentsList');
+            const errorElement = document.createElement('div');
+            errorElement.classList.add('text-red-500', 'font-bold');
+            errorElement.textContent = errorMessage;
+            commentsList.appendChild(errorElement);
+        }
+    </script>
+</body>
+</html>
